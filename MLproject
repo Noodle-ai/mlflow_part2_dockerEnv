@@ -1,0 +1,13 @@
+# sklearn_elasticnet_wine/MLproject
+
+name: tutorial
+
+docker_env:
+  image: mlflow_image
+
+entry_points:
+  main:
+    parameters:
+      alpha: float
+      l1_ratio: {type: float, default: 0.1}
+    command: "python train.py {alpha} {l1_ratio}"
