@@ -1,39 +1,59 @@
-Introduction to MLflow
-======================
+Introduction to MLflow for MLOps Part 2: Docker Environment
+===========================================================
+
+After following along with the demos in this three part repository you will be able to:
+
+* Understand how you and your Data Science teams can improve your MLOps practices using MLflow
+* Use all Components of MLflow (Tracking, Projects, Models, Registry)
+* Use MLflow in an Anaconda Environment
+* Use MLflow with a Docker Environment (including running an IDE inside of a container)
+* Use Postgre Backend Store and Minio Artifact Store for Easy Collaboration
 
 The instructions/demos below assume you are using a Mac OSX operating system. Other operating systems can be used with minor modifications. 
 
-After following along with the demos below you will be able to:
+|
 
-* Use all Components of MLflow
+Table of Contents:
+==================
+Part 1: Anaconda Environment
+----------------------------
+(Github: https://github.com/Noodle-ai/mlflow_part1_condaEnv)
+(Medium: https://medium.com/p/1fd9e299226f)
 
-  * Tracking
-  * Projects
-  * Models
-  * Registry
-* Use MLflow in an Anaconda Environment
-* Use MLflow with a Docker Environment
+1. What is MLflow and Why Should You Use It?
+2. Using MLflow with a Conda Environment 
 
-  * Develop Code Within a Container
-* Use Non-Local Storage for Easy Collaboration
+Part 2: Docker Environment
+--------------------------
+(Github: https://github.com/Noodle-ai/mlflow_part2_dockerEnv)
+(Medium: https://medium.com/p/53516ce45266)
 
-  * Use a PostgreSQL DB as Tracking URI
-  * Use Minio as an Artifact URI
+1. Using MLflow with a Docker Environment
+
+Part 3: Database Tracking, Minio Artifact Storage, and Registry
+---------------------------------------------------------------
+(Github: https://github.com/Noodle-ai/mlflow_part1_condaEnv)
+(Medium: https://medium.com/p/9fef196aaf42)
+
+1. Running MLflow with a PostgreSQL Database and Minio Artifact Store
+2. MLflow Model Registry
 
 |
 
-3. Using MLflow with a Docker Env
+1. Using MLflow with a Docker Env
 =================================
 In this section we cover how to use the various features of MLflow with an Docker environment. 
+
+In part 1 of this three part blog we covered using MLflow with an Anaconda environment. Docker has some advantages in terms of scalability compared with Anaconda. If you develop a pipeline in a container, afterwards with minor modifications to your Dockerfile your pipeline is ready for production. You can then orchestrate containers running your pipeline with tools like Kubernetes. Alternatively, if you are training in a container (as we do below) you could run containers in parallel on a cluster to do hyperparameter tuning.
 
 |
 
 Setting up for the Tutorial
 ---------------------------
 
-1. Make sure you have Anaconda installed.
+1. Make sure you have Anaconda installed
 
-2. Install the mlflow library. 
+2. Install the mlflow library in a python 3 environment
 
 .. code-block:: bash
 
@@ -57,15 +77,14 @@ Setting up for the Tutorial
 
 .. code-block:: bash
 
-  git clone https://<username>@bitbucket.org/noodleai/mlflow_demos.git
+  git clone https://github.com/Noodle-ai/mlflow_part2_dockerEnv.git
 
 7. Build an Image from the Dockerfile
 
-Note: The name of your image (mlflow_image in this case) must match the name in your MLproject file. 
+Note: The name of your image ("mlflow_image" in this case) must match the name in your MLproject file. 
 
 .. code-block:: bash
 
-  cd docker_env
   docker image build -t mlflow_image .
 
 The Dockerfile below is used to create an image which creates the conda environment, then sets up SSH with user "dockeruser" and password "123". 
@@ -77,11 +96,11 @@ The Dockerfile below is used to create an image which creates the conda environm
 
 8. Build a Container from the Image
 
-We use (-P) to publish all exposed ports in the container to random ports (the argument -P is not necessary if not running the container locally). We use (-d) to run the container in the background. And we use (--mount) to mount the mlflow_demos repository in the home folder of dockeruser. 
+We use (-P) to publish all exposed ports in the container to random ports (the argument -P is not necessary if not running the container locally). We use (-d) to run the container in the background. And we use (--mount) to mount the mlflow_part2_dockerEnv repository in the home folder of dockeruser. 
 
 .. code-block:: bash
 
-  docker run -d -P --mount type=bind,source=$(pwd)/../../mlflow_demos,target=/home/dockeruser --name mlflow_container mlflow_image
+  docker run -d -P --mount type=bind,source=$(pwd),target=/home/dockeruser --name mlflow_container mlflow_image
 
 9. Determine the Port that Docker Port 22 was Published to (only necessary if your container is local).
 
@@ -106,17 +125,22 @@ The Dockerfile has been configured so that you can SSH to the container. Because
 |
 
 .. image:: screenshots/ssh_config.png
-  :width: 300
+  :width: 600
 
-If the container is not running locally (for example running in a VM) you can port forward a local port to be connected to the container port in your VM. After you connect your local port to your container you can SSH as if your container was running locally. Choose a <local_port> you would like to use, use the <container_ip_address> that you got in the setup instructions, and lastly use the <vm_ip_address>. After port forwarding you can ssh to <local_port> in order to develop in your container. It is possible you may encounter a permissions issue if you are attempting to connect using a tool like VSCode SSH extension. This extension creates a ".vscode-server" folder inside of the destination folder mounted in the container and dockeruser may not have the permission to do this depending on the default permissions settings in your VM. If this is the case be sure to change the permissions of the "mlflow_demos" directory you are mounting ("chmod 777 mlflow_demos"). The command to port forward is below. 
+If the container is not running locally (for example running in a VM) you can port forward a local port to be connected to the container port in your VM. After you connect your local port to your container you can SSH as if your container was running locally. Choose a <local_port> you would like to use, use the <container_ip_address> that you got in the setup instructions, and lastly use the <vm_ip_address>. After port forwarding you can ssh to <local_port> in order to develop in your container. It is possible you may encounter a permissions issue if you are attempting to connect using a tool like VSCode SSH extension. This extension creates a ".vscode-server" folder inside of the destination folder mounted in the container and dockeruser may not have the permission to do this depending on the default permissions settings in your VM. If this is the case be sure to change the permissions of the "mlflow_part2_dockerEnv" directory you are mounting ("chmod 777 mlflow_part2_dockerEnv"). The command to port forward is below. 
 
 .. code-block:: bash
 
   ssh -L <local_port>:<container_ip_address>:22 <vm_ip_address>
 
-After SSHing into the container if using VSCode you may need to install any extensions you need in the container, select a python interpreter, and then spawn a new terminal. Open experiment.ipynb in the docker_env folder and follow along. The notebook contains examples demonstrating how to use MLflow Tracking and MLflow Models. It also contains descriptions of how to use MLflow Projects.
+|
 
-Note: If you encounter the warning "Warning: Remote Host Identification Has Changed!". This could be due to a new container being on a port that previously hosted a different container. Delete the entry from "~/.ssh/known_hosts".  
+.. image:: screenshots/port_forwarding_graphic.png
+  :width: 600
+
+After SSHing into the container if using VSCode you may need to install any extensions you need in the container, select a python interpreter, and then spawn a new terminal. Open experiment.ipynb and follow along. The notebook contains examples demonstrating how to use MLflow Tracking and MLflow Models. It also contains descriptions of how to use MLflow Projects.
+
+Note: If you encounter the warning "Warning: Remote Host Identification Has Changed!". This could be due to a new container being on a port that previously hosted a different container. Delete the entry from "~/.ssh/known_hosts" to resolve the issue. 
 
 | 
 
@@ -125,7 +149,7 @@ Using the Tracking API
 
 The MLflow tracking API lets you log metrics and artifacts (files from your data science code) in order to track a history of your runs.
 
-Note: The default behavior of MLflow Tracking creates an mlruns folder. Within this mlruns folder absolute paths are used by MLflow. This creates a conflict when tracking experiments created locally and within a container together. In this section to get around the issue I create a different experiment for runs created within the container and runs created from outside the container (named "notebook" and "script" respectively). From the notebook the experiment can be set using "mlflow.set_experiment('notebook')". 
+Note: The default behavior of MLflow Tracking creates an mlruns folder. Within this mlruns folder absolute paths are used by MLflow. This creates a conflict when tracking experiments created locally and within a container together. In this section to get around the issue I create a different experiment for runs created within the container and runs created from outside the container (named "notebook" and "script" respectively). From the notebook the experiment can be set using "mlflow.set_experiment('notebook')". But it is worth keeping in mind that the proper way to resolve this issue is to use a database tracking URI (covered in part 3).
 
 The code below logs a run with one parameter (param1), one metric (foo) with three values (1,2,3), and an artifact (a text file containing "Hello world!").
 
@@ -159,14 +183,9 @@ Activate the MLflow Tracking UI by typing the following into the terminal. You m
 
 .. code-block:: bash
 
-  cd docker_env
   mlflow ui
 
 View the tracking UI by visiting the URL returned by the previous command. Then click on "notebook" under the Experiments tab.
-
-.. code-block:: bash
-
-  http://localhost:5000
 
 .. image:: screenshots/mlflow_ui.png
   :width: 600
@@ -220,6 +239,7 @@ There is also a notebook function of the training script. You can use the notebo
 .. code-block:: python
 
   # Wine Quality Sample
+
   def train(in_alpha, in_l1_ratio):
       import pandas as pd
       import numpy as np
@@ -285,7 +305,6 @@ There is also a notebook function of the training script. You can use the notebo
           mlflow.log_metric("rmse", rmse)
           mlflow.log_metric("r2", r2)
           mlflow.log_metric("mae", mae)
-
           mlflow.sklearn.log_model(lr, "model")
 
 |
@@ -341,22 +360,22 @@ To run this project use mlflow run on the folder containing the MLproject file.
 
 .. code-block:: bash
 
-  mlflow run ../docker_env -P alpha=1.0 -P l1_ratio=1.0 --experiment-name script
+  mlflow run . -P alpha=1.0 -P l1_ratio=1.0 --experiment-name script
 
 This builds a new Docker image based on "mlflow_image" that also contains our project code. This resulting image is tagged as "mlflow_image-<git-version> where <git-version> is the git commit ID. After the image is built, MLflow executes the default (main) project entry point within the container using "docker run". 
 
 Environment variables, such as "MLFLOW_TRACKING_URI", are propagated inside the container during project execution. When running against a local tracking URI, MLflow mounts the host system's tracking directory (e.g. a local mlruns directory) inside the container so that metrics and params logged during project execution are accesible afterwards. 
 
-If a repository has an MLproject file you can also run a project directly from GitHub. This tutorial lives in the https://bitbucket.org/noodleai/mlflow_demos repository which you can run with the following command. The symbol "#" is used to move into a subdirectory of the repo. The "--version" argument can be used to run code from a different branch. The "--exeriment-name" argument can be used to choose an experiment name in mlruns. We must set experiment in this case to be different than the experiment ran in the container because absolute paths in MLflow Tracking will lead to an error. You will need to type your username into the below command. The image must be built locally for this to work.
+If a repository has an MLproject file you can also run a project directly from GitHub. This tutorial lives in the https://github.com/Noodle-ai/mlflow_part2_dockerEnv repository which you can run with the following command. The symbol "#" can be used to move into a subdirectory of the repo. The "--version" argument can be used to run code from a different branch. The "--exeriment-name" argument can be used to choose an experiment name in mlruns. We must set experiment in this case to be different than the experiment ran in the container because absolute paths in MLflow Tracking will lead to an error. The image must be built locally for this to work.
 
 .. code-block:: bash
 
-  mlflow run https://<username>@bitbucket.org/noodleai/mlflow_demos.git#docker_env -P alpha=1.0 -P l1_ratio=0.8 --experiment-name script
+  mlflow run https://github.com/Noodle-ai/mlflow_part2_dockerEnv -P alpha=1.0 -P l1_ratio=0.8 --experiment-name script
 
 |
 
-Serving the Model
-"""""""""""""""""
+Serving the Model (Local REST API Server)
+"""""""""""""""""""""""""""""""""""""""""
 
 Now that you have packaged your model using the MLproject convention and have identified the best model, it is time to deploy the model using MLflow Models. An MLflow Model is a standard format for packaging machine learning models that can be used in a variety of downstream tools - for example, real-time serving through a REST API or batch inference on Apache Spark. 
 
@@ -385,7 +404,7 @@ To deploy the server, run the following command.
 
 Note:
 The version of Python used to create the model must be the same as the one running "mlflow models serve". If this is not the case, you may see the error 
-* UnicodeDecodeError: 'ascii' codec can't decode byte 0x9f in position 1: ordinal not in range(128) or raise ValueError, "unsupported pickle protocol: %d".
+UnicodeDecodeError: 'ascii' codec can't decode byte 0x9f in position 1: ordinal not in range(128) or raise ValueError, "unsupported pickle protocol: %d".
 
 Once you have deployed the server, you can pass it some sample data and see the predictions. The following example uses curl to send a JSON-serialized pandas DataFrame with the split orientation to the model server. For more information about the input data formats accepted by the model server, see the MLflow deployment tools documentation.
 
@@ -394,6 +413,39 @@ Once you have deployed the server, you can pass it some sample data and see the 
   curl -X POST -H "Content-Type:application/json; format=pandas-split" --data '{"columns":["alcohol", "chlorides", "citric acid", "density", "fixed acidity", "free sulfur dioxide", "pH", "residual sugar", "sulphates", "total sulfur dioxide", "volatile acidity"],"data":[[12.8, 0.029, 0.48, 0.98, 6.2, 29, 3.33, 1.2, 0.39, 75, 0.66]]}' http://127.0.0.1:1234/invocations
 
 The server should respond with output similar to:
+
+.. code-block:: bash
+
+  [3.7783608837127516]
+
+|
+
+Serving the Model (Serving the Model as a Docker Image)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Note: This command is experimental (may be changed or removed in a future release without warning) and does not guarantee that the arguments nor format of the Docker container will remain the same.
+
+Here we build a Docker image whose default entry point serves the specified MLflow model at port 8080 within the container.
+
+The command below builds a docker image named "serve_model" that serves the model in "./mlruns/1/<run_id>/artifacts/model".
+
+.. code-block:: bash
+
+  mlflow models build-docker -m "./mlruns/1/<run_id>/artifacts/model" -n "serve_model"
+
+We can then serve the model, exposing it at port 5001 on the host with the following command.
+
+.. code-block:: bash
+
+  docker run -p 5001:8080 "serve_model"
+
+Once you have created a container that serves the model with the above command, you can pass it some sample data and see the predictions. Similar to above, the following example uses curl to send a JSON-serialized pandas DataFrame with the split orientation to the model server.
+
+.. code-block:: bash
+
+  curl -X POST -H "Content-Type:application/json; format=pandas-split" --data '{"columns":["alcohol", "chlorides", "citric acid", "density", "fixed acidity", "free sulfur dioxide", "pH", "residual sugar", "sulphates", "total sulfur dioxide", "volatile acidity"],"data":[[12.8, 0.029, 0.48, 0.98, 6.2, 29, 3.33, 1.2, 0.39, 75, 0.66]]}' http://127.0.0.1:5001/invocations
+
+Again, the server should respond with an output similar to:
 
 .. code-block:: bash
 
@@ -415,6 +467,8 @@ https://www.mlflow.org/docs/latest/quickstart.html
 https://www.mlflow.org/docs/latest/tutorials-and-examples/tutorial.html#conda-example
 
 https://github.com/mlflow/mlflow/tree/master/examples/docker
+
+https://www.mlflow.org/docs/latest/cli.html#mlflow-models-build-docker
 
 |
 
