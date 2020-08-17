@@ -7,7 +7,7 @@ After following along with the demos in this three part repository you will be a
 * Use all Components of MLflow (Tracking, Projects, Models, Registry)
 * Use MLflow in an Anaconda Environment
 * Use MLflow with a Docker Environment (including running an IDE inside of a container)
-* Use Postgre Backend Store and Minio Artifact Store for Easy Collaboration
+* Use Postgres Backend Store and Minio Artifact Store for Easy Collaboration
 
 The instructions/demos below assume you are using a Mac OSX operating system. Other operating systems can be used with minor modifications. 
 
