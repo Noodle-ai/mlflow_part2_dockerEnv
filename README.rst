@@ -44,7 +44,7 @@ Part 3: Database Tracking, Minio Artifact Storage, and Registry
 =================================
 In this section we cover how to use the various features of MLflow with an Docker environment. 
 
-In part 1 of this three part blog we covered using MLflow with an Anaconda environment. Docker has some advantages in terms of scalability compared with Anaconda. If you develop a pipeline in a container, afterwards with minor modifications to your Dockerfile your pipeline is ready for production. For example, you may need to delete aspects of the Dockerfile used for development (Jupyter library, SSH configuration), and add a way to output objects of interest (write to a database, serve over REST). You can then orchestrate containers running your pipeline with tools like Kubernetes on a cluster that scales with traffic. Alternatively, if you are training in a container (as we do below) you could run containers in parallel on a cluster to do hyperparameter tuning.
+In part 1 of this three part blog we covered using MLflow with an Anaconda environment. Docker has some advantages in terms of scalability compared with Anaconda. If you develop a pipeline in a container, afterwards with minor modifications to your Dockerfile your pipeline is ready for production. For example, you may need to delete aspects of the Dockerfile used for development (Jupyter library, SSH configuration), and add a way to output objects of interest (write to a database, serve over REST). You can then orchestrate containers running your pipeline with tools like Kubernetes on a cluster that scales with traffic. Alternatively, if you are training in a container (as we do below) you can run containers in parallel on a cluster to do hyperparameter tuning.
 
 |
 
