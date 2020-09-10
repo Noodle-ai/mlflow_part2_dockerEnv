@@ -427,7 +427,7 @@ The command below builds a docker image named "serve_model" that serves the mode
 
   mlflow models build-docker -m "./mlruns/1/<run_id>/artifacts/model" -n "serve_model"
 
-We can then serve the model, exposing it at port 5001 on the host with the following command.
+We can then serve the model, exposing it at port 5001 on the host with the following command:
 
 .. code-block:: bash
 
