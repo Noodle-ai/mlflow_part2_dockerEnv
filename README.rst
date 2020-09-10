@@ -1,7 +1,7 @@
 Introduction to MLflow for MLOps Part 2: Docker Environment
 ===========================================================
 
-After following along with the demos in this three part repository you will be able to:
+After following along with the demos in this three-part repository you will be able to:
 
 * Understand how you and your Data Science teams can improve your MLOps practices using MLflow
 * Use all Components of MLflow (Tracking, Projects, Models, Registry)
@@ -36,7 +36,7 @@ Part 2: Docker Environment
 =================================
 In this section we cover how to use the various features of MLflow with an Docker environment. 
 
-In part 1 of this three part blog we covered using MLflow with an Anaconda environment. Docker has some advantages in terms of scalability compared with Anaconda. If you develop a pipeline in a container, afterwards with minor modifications to your Dockerfile your pipeline is ready for production. For example, you may need to delete aspects of the Dockerfile used for development (Jupyter library, SSH configuration), include your pipeline script as a command, and add a way to output objects of interest (write to a database, serve over REST). You can then orchestrate containers running your pipeline with tools like Kubernetes on a cluster that scales with traffic. Alternatively, if you are training in a container (as we do below) you can run containers in parallel on a cluster to do hyperparameter tuning.
+In part 1 of this three part blog we covered using MLflow with an Anaconda environment. Docker has some advantages in terms of scalability compared to Anaconda. If you develop a pipeline in a container afterwards, with minor modifications to your Dockerfile, your pipeline is ready for production. For example, you may need to delete aspects of the Dockerfile used for development (Jupyter library, SSH configuration), include your pipeline script as a command, and add a way to output objects of interest (write to a database, serve over REST). You can then orchestrate containers, running your pipeline with tools like Kubernetes on a cluster that scales with traffic. Alternatively, if you are training in a container (as we do below) you can run containers in parallel on a cluster to do hyperparameter tuning.
 
 |
 
@@ -47,7 +47,7 @@ Note: We will present two options for developing inside a container. The first i
 
 1. Make sure you have Anaconda installed
 
-2. Install the mlflow library in a python 3 environment
+2. Install the MLflow library in a Python 3 environment
 
 .. code-block:: bash
 
@@ -96,7 +96,7 @@ We use (-P) to publish all exposed ports in the container to random ports (the a
 
   docker run -d -P --mount type=bind,source=$(pwd),target=/home/dockeruser --name mlflow_container mlflow_image
 
-9. Determine the Port that Docker Port 22 was Published to (necessary for the local container workflow, not for the remote container workflow).
+9. Determine the Port that Docker Port 22 was published to (necessary for the local container workflow, not for the remote container workflow).
 
 .. code-block:: bash
 
@@ -121,7 +121,7 @@ The Dockerfile has been configured so that you can SSH to the container. Because
 .. image:: screenshots/ssh_config.png
   :width: 600
 
-If the container is not running locally (for example running in a VM) you can port forward a local port to be connected to the container port in your VM. After you connect your local port to your container you can SSH as if your container was running locally. Choose a <local_port> you would like to use, use the <container_ip_address> that you got in the setup instructions, and lastly use the <vm_ip_address>. After port forwarding you can ssh to <local_port> in order to develop in your container. It is possible you may encounter a permissions issue if you are attempting to connect using a tool like VSCode SSH extension. This extension creates a ".vscode-server" folder inside of the destination folder mounted in the container and dockeruser may not have the permission to do this depending on the default permissions settings in your VM. If this is the case be sure to change the permissions of the "mlflow_part2_dockerEnv" directory you are mounting ("chmod 777 mlflow_part2_dockerEnv"). The command to port forward is below. 
+If the container is not running locally (for example running in a VM) you can port forward a local port to be connected to the container port in your VM. After you connect your local port to your container you can SSH as if your container was running locally. Choose a <local_port> you would like to use, use the <container_ip_address> that you got in the setup instructions, and lastly use the <vm_ip_address>. After port forwarding you can SSH to <local_port> in order to develop in your container. It is possible you may encounter a permissions issue if you are attempting to connect using a tool like VSCode SSH extension. This extension creates a ".vscode-server" folder inside of the destination folder mounted in the container and dockeruser may not have the permission to do this depending on the default permissions settings in your VM. If this is the case be sure to change the permissions of the "mlflow_part2_dockerEnv" directory you are mounting ("chmod 777 mlflow_part2_dockerEnv"). The command to port forward is below. 
 
 .. code-block:: bash
 
@@ -132,7 +132,7 @@ If the container is not running locally (for example running in a VM) you can po
 .. image:: screenshots/port_forwarding_graphic.png
   :width: 600
 
-After SSHing into the container if using VSCode you may need to install any extensions you need in the container, select a python interpreter, and then spawn a new terminal. Open experiment.ipynb and follow along. The notebook contains examples demonstrating how to use MLflow Tracking and MLflow Models. It also contains descriptions of how to use MLflow Projects.
+After SSH-ing into the container if using VSCode you may need to install any extensions you need in the container, select a Python interpreter, and then spawn a new terminal. Open experiment.ipynb and follow along. The notebook contains examples demonstrating how to use MLflow Tracking and MLflow Models. It also contains descriptions of how to use MLflow Projects.
 
 Note: If you encounter the warning "Warning: Remote Host Identification Has Changed!" this could be due to a new container being on a port that previously hosted a different container. Delete the entry from "~/.ssh/known_hosts" to resolve the issue. 
 
@@ -207,7 +207,7 @@ Click on the metric to see more details.
 Example Incorporating MLflow Tracking, MLflow Models, and MLflow Projects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this example MLflow Tracking is used to keep track of different hyperparameters, performance metrics, and artifacts of a linear regression model. MLflow Models is used to store the pickled trained model instance, a file describing the environment the model instance was created in, and a descriptor file that lists several "flavors" the model can be used in. MLflow Projects is used to package the training code. And lastly MLflow Models is used to deploy the model to a simple HTTP server.
+In this example MLflow Tracking is used to keep track of different hyperparameters, performance metrics, and artifacts of a linear regression model. MLflow Models is used to store the pickled trained model instance, a file describing the environment the model instance was created in, and a descriptor file that lists several "flavors" the model can be used in. MLflow Projects is used to package the training code. Lastly MLflow Models is used to deploy the model to a simple HTTP server.
 
 This tutorial uses a dataset to predict the quality of wine based on quantitative features like the wine's "fixed acidity", "pH", "residual sugar", and so on. The dataset is from UCI's machine learning repository.
 
@@ -360,7 +360,7 @@ This builds a new Docker image based on "mlflow_image" that also contains our pr
 
 Environment variables, such as "MLFLOW_TRACKING_URI", are propagated inside the container during project execution. When running against a local tracking URI, MLflow mounts the host system's tracking directory (e.g. a local mlruns directory) inside the container so that metrics and params logged during project execution are accesible afterwards. 
 
-If a repository has an MLproject file you can also run a project directly from GitHub. This tutorial lives in the https://github.com/Noodle-ai/mlflow_part2_dockerEnv repository which you can run with the following command. The symbol "#" can be used to move into a subdirectory of the repo. The "--version" argument can be used to run code from a different branch. The "--exeriment-name" argument can be used to choose an experiment name in mlruns. We must set experiment in this case to be different than the experiment ran in the container because absolute paths in MLflow Tracking will lead to an error. The image must be built locally for this to work.
+If a repository has an MLproject file you can also run a project directly from GitHub. This tutorial lives in the https://github.com/Noodle-ai/mlflow_part2_dockerEnv repository which you can run with the following command. The symbol "#" can be used to move into a subdirectory of the repo. The "--version" argument can be used to run code from a different branch. The "--experiment-name" argument can be used to choose an experiment name in mlruns. We must set experiment in this case to be different than the experiment ran in the container because absolute paths in MLflow Tracking will lead to an error. The image must be built locally for this to work.
 
 .. code-block:: bash
 
@@ -371,7 +371,7 @@ If a repository has an MLproject file you can also run a project directly from G
 Serving the Model (Local REST API Server)
 """""""""""""""""""""""""""""""""""""""""
 
-Now that you have packaged your model using the MLproject convention and have identified the best model, it is time to deploy the model using MLflow Models. An MLflow Model is a standard format for packaging machine learning models that can be used in a variety of downstream tools - for example, real-time serving through a REST API or batch inference on Apache Spark. 
+Now that you have packaged your model using the MLproject convention and have identified the best model, it's time to deploy the model using MLflow Models. A MLflow Model is a standard format for packaging machine learning models that can be used in a variety of downstream tools - for example, real-time serving through a REST API or batch inference on Apache Spark. 
 
 In the example training code above, after training the linear regression model, a function in MLflow saved the model as an artifact within the run.
 
@@ -390,7 +390,7 @@ At the bottom, you can see that the call to mlflow.sklearn.log_model produced th
 
 In this example, you can use this MLmodel format with MLflow to deploy a local REST server that can serve predictions. 
 
-To deploy the server, run the following command.
+To deploy the server, run the following command:
 
 .. code-block:: bash
 
