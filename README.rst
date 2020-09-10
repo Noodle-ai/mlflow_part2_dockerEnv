@@ -371,7 +371,7 @@ If a repository has an MLproject file you can also run a project directly from G
 Serving the Model (Local REST API Server)
 """""""""""""""""""""""""""""""""""""""""
 
-Now that you have packaged your model using the MLproject convention and have identified the best model, it's time to deploy the model using MLflow Models. A MLflow Model is a standard format for packaging machine learning models that can be used in a variety of downstream tools - for example, real-time serving through a REST API or batch inference on Apache Spark. 
+Now that you have packaged your model using the MLproject convention and have identified the best model, it's time to deploy the model using MLflow Models. An MLflow Model is a standard format for packaging machine learning models that can be used in a variety of downstream tools - for example, real-time serving through a REST API or batch inference on Apache Spark. 
 
 In the example training code above, after training the linear regression model, a function in MLflow saved the model as an artifact within the run.
 
