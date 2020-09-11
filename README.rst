@@ -28,8 +28,6 @@ Part 2: Docker Environment
 (Github: https://github.com/Noodle-ai/mlflow_part2_dockerEnv)
 (Medium: https://medium.com/p/53516ce45266)
 
-1. Using MLflow with a Docker Environment
-
 |
 
 1. Using MLflow with a Docker Env
