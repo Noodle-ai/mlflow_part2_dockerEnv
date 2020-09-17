@@ -30,6 +30,14 @@ Part 2: Docker Environment
 
 1. Using MLflow with a Docker Environment
 
+Part 3: Database Tracking, Minio Artifact Storage, and Registry
+---------------------------------------------------------------
+(Github: https://github.com/Noodle-ai/mlflow_part1_condaEnv)
+(Medium: https://medium.com/p/9fef196aaf42)
+
+1. Running MLflow with a PostgreSQL Database and Minio Artifact Store
+2. MLflow Model Registry
+
 |
 
 1. Using MLflow with a Docker Env
